@@ -1,22 +1,17 @@
 version: 0.0
 os: linux
-
-# Hooks define the deployment lifecycle events and actions
-hooks:
-  # BeforeInstall: Run commands before the new version of the application is installed
-  BeforeInstall:
-    - location: scripts/before-install.sh
-
-  # AfterInstall: Run commands after the new version of the application is installed
-  AfterInstall:
-    - location: scripts/after-install.sh
-
-  # ApplicationStart: Run commands to start the application
-  ApplicationStart:
-    - location: scripts/application-start.sh
-
-# Files section specifies the source and destination locations of the deployment files
 files:
-  - source: /
-    destination: /var/www/my-react-app
-    overwrite: true
+  - source: /index.html
+    destination: /var/www/html/
+hooks:
+  BeforeInstall:
+    - location: scripts/install_dependencies
+      timeout: 300
+      runas: root
+    - location: scripts/start_server
+      timeout: 300
+      runas: root
+  ApplicationStop:
+    - location: scripts/stop_server
+      timeout: 300
+      runas: root
